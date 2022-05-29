@@ -8,7 +8,7 @@ const width = 1000;
 // d3.extent(data.movies, function (d) { return d.movie_release_date; })
 // xScale = d3.scaleTime().range([80, width - 20]).domain(jsondata, function (d) { return d.InstallDate.getTime() });
 dataRange = [new Date(2022, 0).getTime(), new Date(2022, 12).getTime()]
-console.log(dataRange)
+// console.log(dataRange)
 xScale = d3.scaleTime().range([80, width]).domain(dataRange);
 
 /* 
@@ -82,6 +82,7 @@ const svg = d3.select('#container')
   .call(labels);
 
 function colorOnPatchCategory(category) {
+  console.log("Color on Patch Category",category)
   switch (category) {
     case "Definition Update": return 1;
     case "Updates": return 2;
@@ -102,20 +103,24 @@ function update(data) {
     .join('g')
     .attr('class', 'date-bin-group')
     .attr('transform', d => `translate(0, ${15 * (d.PatchCategory ? 1 : -1)})`)
-    // .selectAll('.event')
-    .data(d => d.PatchCategory/* , d => d.uid */)
+
+    
+    
+    // PatchCategory should be selected in data as full string instead of individual characters
+    .data(d => [d])
     .join(
       enter => enter.append('circle')
         .attr('fill', d => d3.schemeTableau10[colorOnPatchCategory(d.PatchCategory)])
+        // .attr('fill', d => console.log(d.PatchCategory))
         .attr('r', 4)
         .attr('cx', 0)
         .attr('cy', 0)
-        // .attr('class', 'event')
+        .attr('class', 'event')
         // .attr('transform', (d, i, nodes) => `translate(0, ${i * 10 * (d.PatchCategory ? 1 : -1)})`)
-        .attr('transform', (d, i, nodes) => `translate(0, ${i * 10 * (d.PatchCategory ? 1 : -1)})`)
-        .call(el => el.attr('opacity', 1)
-          .transition().duration(1000)
-          .attr('opacity', 1))
+        // .attr('transform', (d, i, nodes) => `translate(0, ${i * 10 * (d.PatchCategory ? 1 : -1)})`)
+        // .call(el => el.attr('opacity', 1)
+        //   .transition().duration(1000)
+        //   .attr('opacity', 1))
       // update => update
       //   .call(els => els.transition().duration(200)
       //     .attr('transform', (d, i, nodes) => `translate(0, ${i * 10 * (console.log(d.PatchCategory) ? 1 : -1)})`)),
@@ -128,29 +133,29 @@ update(jsondata)
 
 
 
-events = () => {
-  const events = new Array(numberOfEvents).fill(0);
-  console.log('this is events')
-  events.forEach((event, i) => {
-    const randomTime = Math.random() * (dateRange[1] - dateRange[0]) + dateRange[0];
-    events[i] = {
-      uid: i,
-      position: Math.round(Math.random()) === 1,
-      category: Math.floor(Math.random() * numberOfCategories),
-      date: new Date(randomTime)
-    };
-  });
+// events = () => {
+//   const events = new Array(numberOfEvents).fill(0);
+//   console.log('this is events')
+//   events.forEach((event, i) => {
+//     const randomTime = Math.random() * (dateRange[1] - dateRange[0]) + dateRange[0];
+//     events[i] = {
+//       uid: i,
+//       position: Math.round(Math.random()) === 1,
+//       category: Math.floor(Math.random() * numberOfCategories),
+//       date: new Date(randomTime)
+//     };
+//   });
 
-  events.sort((a, b) => a.date.getTime() - b.date.getTime());
-  return events;
-}
+//   events.sort((a, b) => a.date.getTime() - b.date.getTime());
+//   return events;
+// }
 
-// let ev = events()
+// // let ev = events()
 
-// let groupedEvents = d3.group(
-//   ev.filter(e => categories().includes(`${e.category}`)),
-//   d => new Date(d.date.getFullYear(), d.date.getMonth()).toDateString(),
-//   console.log(d => d.position),
-//   d => d.position)
+// // let groupedEvents = d3.group(
+// //   ev.filter(e => categories().includes(`${e.category}`)),
+// //   d => new Date(d.date.getFullYear(), d.date.getMonth()).toDateString(),
+// //   console.log(d => d.position),
+// //   d => d.position)
 
 
